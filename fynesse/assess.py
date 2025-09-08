@@ -173,7 +173,7 @@ def plot_city_map(
     # Get graph from location
     graph = ox.graph_from_bbox(bbox)#,# network_type="all")
     # City area
-    area = ox.geocode_to_gdf(place_name)
+    #area = ox.geocode_to_gdf(place_name)
     # Street network
     nodes, edges = ox.graph_to_gdfs(graph)
     # Buildings
