@@ -13,11 +13,3 @@ DEFAULT_TAGS:
   "religion": True,
   "memorial": True,
   "manmade": True,
-  # amenity: true
-  # buildings: true
-  # historic: true
-  # leisure: true
-  # shop: true
-  # tourism: true
-  # religion: true
-  # memorial: true
