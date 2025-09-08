@@ -10,6 +10,7 @@ import os
 from .config import *
 from . import access
 
+from access import * 
 # Set up logging
 logger = logging.getLogger(__name__)
 
