@@ -173,7 +173,7 @@ def plot_city_map(
     if not poi_tags:
         poi_tags = load_default_tags()
     # placestub = place_name.lower().replace(" ", "-").replace(",", "")
-    bbox = get_box(latitude, longitude, box_size_km=box_size_km)
+    bbox = get_bbox(latitude,longitude,box_size_km)
     west, south, east, north = bbox
     
     #get pois 
@@ -182,14 +182,14 @@ def plot_city_map(
     # Get graph from location
     graph = ox.graph_from_bbox(bbox)
     # City area
-    area = ox.geocode_to_gdf(place_name)
+    #area = ox.geocode_to_gdf(place_name)
     # Street network
     nodes, edges = ox.graph_to_gdfs(graph)
     # Buildings
     buildings = ox.features_from_bbox(bbox, tags={"building": True})
 
     fig, ax = plt.subplots(figsize=(6, 6))
-    area.plot(ax=ax, color="tan", alpha=0.5)
+    #area.plot(ax=ax, color="tan", alpha=0.5)
     buildings.plot(ax=ax, facecolor="gray", edgecolor="gray")
     edges.plot(ax=ax, linewidth=1, edgecolor="black", alpha=0.3)
     nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3)
