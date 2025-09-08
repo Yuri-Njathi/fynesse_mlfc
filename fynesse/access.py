@@ -62,7 +62,11 @@ def get_osm_datapoints(latitude, longitude, box_size_km=2, poi_tags=None):
     buildings = ox.features_from_bbox(bbox, tags={"building": True})
     pois = None
     if poi_tags:
-        pois = ox.features_from_bbox(bbox, tags=poi_tags)
+        #pois = ox.features_from_bbox(bbox, tags=poi_tags)
+        try:
+            pois = ox.features_from_bbox(bbox, tags)
+        except Exception as e:
+            pois = None
     
     # Ensure correct geometry column
     nodes = nodes.set_geometry("geometry")
