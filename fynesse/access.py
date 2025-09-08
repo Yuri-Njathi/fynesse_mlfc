@@ -52,15 +52,6 @@ def get_osm_datapoints(latitude, longitude, box_size_km=2, poi_tags=None):
         OSM points of interest (if poi_tags provided), else None.
     """
     
-    # # Convert km to degrees
-    # lat_offset = (box_size_km / 2) / 111
-    # lon_offset = (box_size_km / 2) / (111 * math.cos(math.radians(latitude)))
-
-    # north = latitude + lat_offset
-    # south = latitude - lat_offset
-    # east = longitude + lon_offset
-    # west = longitude - lon_offset
-    # bbox = (west, south, east, north)
     bbox = get_bbox(latitude,longitude,box_size_km)
 
     # Road graph
