@@ -3,6 +3,16 @@ data_url: https://raw.githubusercontent.com/lawrennd/datasets_mirror/main/
 
 ## Default poi tags if none are specified
 DEFAULT_TAGS:
+  "amenity": True,
+  "buildings": True,
+  "historic": True,
+  "leisure": True,
+  'vegetation':True,
+  "shop": True,
+  "tourism": True,
+  "religion": True,
+  "memorial": True,
+  "manmade":True
   # amenity: true
   # buildings: true
   # historic: true
