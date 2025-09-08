@@ -161,35 +161,25 @@ def plot_city_map(
     box_size_km: Union[float, int] = 2,
     poi_tags: Optional[Dict[str, Union[bool, str, list[str]]]] = None,
 ) -> None:
-    """
-    show a matplotlib plot of features around place_name centered at (latitude, longitude), \
-        with bounding box dimensions box_size_km*box_size_km
-    args:
-        place_name:str eg 'Nyeri, Kenya'
-        latitude: latitude of place_name in degrees
-        box_size_km: int/float:
-        poi_tags: features to plot in the map
-    returns: None
-    """
-    if not poi_tags:
-        poi_tags = load_default_tags()
-    # placestub = place_name.lower().replace(" ", "-").replace(",", "")
+    # def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None):
+    '''
+    Access and visualize geographic data
+    '''
+    #generate bounding box
     bbox = get_bbox(latitude,longitude,box_size_km)
     west, south, east, north = bbox
-    
-    #get pois 
-    pois = get_pois(poi_tags)
-
+    # POIs
+    pois = get_pois(bbox,poi_tags) 
     # Get graph from location
-    graph = ox.graph_from_bbox(bbox)
+    graph = ox.graph_from_bbox(bbox)#,# network_type="all")
     # City area
-    #area = ox.geocode_to_gdf(place_name)
+    area = ox.geocode_to_gdf(place_name)
     # Street network
     nodes, edges = ox.graph_to_gdfs(graph)
     # Buildings
     buildings = ox.features_from_bbox(bbox, tags={"building": True})
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=(6,6))
     #area.plot(ax=ax, color="tan", alpha=0.5)
     buildings.plot(ax=ax, facecolor="gray", edgecolor="gray")
     edges.plot(ax=ax, linewidth=1, edgecolor="black", alpha=0.3)
@@ -199,3 +189,41 @@ def plot_city_map(
     ax.set_ylim(south, north)
     ax.set_title(place_name, fontsize=14)
     plt.show()
+    # """
+    # show a matplotlib plot of features around place_name centered at (latitude, longitude), \
+    #     with bounding box dimensions box_size_km*box_size_km
+    # args:
+    #     place_name:str eg 'Nyeri, Kenya'
+    #     latitude: latitude of place_name in degrees
+    #     box_size_km: int/float:
+    #     poi_tags: features to plot in the map
+    # returns: None
+    # """
+    # if not poi_tags:
+    #     poi_tags = load_default_tags()
+    # # placestub = place_name.lower().replace(" ", "-").replace(",", "")
+    # bbox = get_bbox(latitude,longitude,box_size_km)
+    # west, south, east, north = bbox
+    
+    # #get pois 
+    # pois = get_pois(poi_tags)
+
+    # # Get graph from location
+    # graph = ox.graph_from_bbox(bbox)
+    # # City area
+    # #area = ox.geocode_to_gdf(place_name)
+    # # Street network
+    # nodes, edges = ox.graph_to_gdfs(graph)
+    # # Buildings
+    # buildings = ox.features_from_bbox(bbox, tags={"building": True})
+
+    # fig, ax = plt.subplots(figsize=(6, 6))
+    # #area.plot(ax=ax, color="tan", alpha=0.5)
+    # buildings.plot(ax=ax, facecolor="gray", edgecolor="gray")
+    # edges.plot(ax=ax, linewidth=1, edgecolor="black", alpha=0.3)
+    # nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3)
+    # pois.plot(ax=ax, color="green", markersize=5, alpha=1)
+    # ax.set_xlim(west, east)
+    # ax.set_ylim(south, north)
+    # ax.set_title(place_name, fontsize=14)
+    # plt.show()
