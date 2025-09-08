@@ -4,6 +4,25 @@ import osmnx as ox
 import matplotlib.pyplot as plt
 import math
 
+def get_bbox(latitude,longitude,box_size_km):
+    '''
+    Takes location and box size in km
+    Returns bounding box coordinates (square)
+
+    '''
+    # Convert km to degrees
+    lat_offset = (box_size_km / 2) / 111
+    lon_offset = (box_size_km / 2) / (111 * math.cos(math.radians(latitude)))
+
+
+    north = latitude + lat_offset
+    south = latitude - lat_offset
+    east = longitude + lon_offset
+    west = longitude - lon_offset
+
+
+    return west, south, east, north
+
 def get_osm_datapoints(latitude, longitude, box_size_km=2, poi_tags=None):
     """
     Function for getting OSM data
@@ -33,15 +52,16 @@ def get_osm_datapoints(latitude, longitude, box_size_km=2, poi_tags=None):
         OSM points of interest (if poi_tags provided), else None.
     """
     
-    # Convert km to degrees
-    lat_offset = (box_size_km / 2) / 111
-    lon_offset = (box_size_km / 2) / (111 * math.cos(math.radians(latitude)))
+    # # Convert km to degrees
+    # lat_offset = (box_size_km / 2) / 111
+    # lon_offset = (box_size_km / 2) / (111 * math.cos(math.radians(latitude)))
 
-    north = latitude + lat_offset
-    south = latitude - lat_offset
-    east = longitude + lon_offset
-    west = longitude - lon_offset
-    bbox = (west, south, east, north)
+    # north = latitude + lat_offset
+    # south = latitude - lat_offset
+    # east = longitude + lon_offset
+    # west = longitude - lon_offset
+    # bbox = (west, south, east, north)
+    bbox = get_bbox(latitude,longitude,box_size_km)
 
     # Road graph
     graph = ox.graph_from_bbox(bbox, network_type="all")
