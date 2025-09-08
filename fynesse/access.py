@@ -72,7 +72,7 @@ def get_osm_datapoints(latitude, longitude, box_size_km=2, poi_tags=None):
     buildings = ox.features_from_bbox(bbox, tags={"building": True})
 
     #get pois 
-    
+    pois = get_pois(poi_tags)
     
     # Ensure correct geometry column
     nodes = nodes.set_geometry("geometry")
