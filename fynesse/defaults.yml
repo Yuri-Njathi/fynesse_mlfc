@@ -7,7 +7,7 @@ DEFAULT_TAGS:
   "buildings": True,
   "historic": True,
   "leisure": True,
-  "vegetation":True,
+  "vegetation": True,
   "shop": True,
   "tourism": True,
   "religion": True,
