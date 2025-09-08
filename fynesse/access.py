@@ -23,14 +23,15 @@ def get_bbox(latitude,longitude,box_size_km):
 
     return west, south, east, north
 
-def get_pois(poi_tags):
+def get_pois(bbox,poi_tags):
     pois = None
     if poi_tags:
         #pois = ox.features_from_bbox(bbox, tags=poi_tags)
         try:
             pois = ox.features_from_bbox(bbox, tags)
         except Exception as e:
-            pois = None
+          print("Exceptions : ",e)
+          pois = None
     return pois
     
 def get_osm_datapoints(latitude, longitude, box_size_km=2, poi_tags=None):
