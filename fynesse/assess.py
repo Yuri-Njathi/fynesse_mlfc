@@ -159,7 +159,7 @@ def plot_city_map(
     latitude: float,
     longitude: float,
     box_size_km: Union[float, int] = 2,
-    poi_tags: Optional[Dict[str, Union[bool, str, list[str]]]] = None,
+    poi_tags: Optional[Dict[str, Union[bool, str, list[str]]]] = load_default_tags(),#None,
 ) -> None:
     # def plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=None):
     '''
