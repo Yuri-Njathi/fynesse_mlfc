@@ -175,7 +175,9 @@ def plot_city_map(
     # placestub = place_name.lower().replace(" ", "-").replace(",", "")
     bbox = get_box(latitude, longitude, box_size_km=box_size_km)
     west, south, east, north = bbox
-    pois = ox.features_from_bbox(bbox, poi_tags)
+    
+    #get pois 
+    pois = get_pois(poi_tags)
 
     # Get graph from location
     graph = ox.graph_from_bbox(bbox)
