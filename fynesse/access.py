@@ -28,7 +28,7 @@ def get_pois(bbox,poi_tags):
     if poi_tags:
         #pois = ox.features_from_bbox(bbox, tags=poi_tags)
         try:
-            pois = ox.features_from_bbox(bbox, tags)
+            pois = ox.features_from_bbox(bbox, poi_tags)
         except Exception as e:
           print("Exceptions : ",e)
           pois = None
