@@ -189,3 +189,78 @@ def plot_city_map(
     ax.set_ylim(south, north)
     ax.set_title(place_name, fontsize=14)
     plt.show()
+
+def get_feature_vector(latitude, longitude, box_size_km=2, features=None):
+    """
+    Given a central point (latitude, longitude) and a bounding box size,
+    query OpenStreetMap via OSMnx and return a feature vector.
+
+    Parameters
+    ----------
+    latitude : float
+        Latitude of the center point.
+    longitude : float
+        Longitude of the center point.
+    box_size : float
+        Size of the bounding box in kilometers
+    features : list of tuples
+        List of (key, value) pairs to count. Example:
+        [
+            ("amenity", None),
+            ("amenity", "school"),
+            ("shop", None),
+            ("tourism", "hotel"),
+        ]
+
+    Returns
+    -------
+    feature_vector : dict
+        Dictionary of feature counts, keyed by (key, value).
+    """
+    bbox = get_bbox(latitude,longitude,box_size_km)
+    west, south, east, north = bbox
+    # POIs
+    pois = get_pois(bbox,poi_tags) 
+    # # Construct bbox from lat/lon and box_size
+    # box_width = box_size_km*0.1/11 # About 11 km
+    # box_height = box_size_km*0.1/11
+    # north = latitude + box_height/2
+    # south = latitude - box_height/2
+    # west = longitude - box_width/2
+    # east = longitude + box_height/2
+    # bbox = (west, south, east, north)
+    # # Query OSMnx for features
+    # try:
+    #   pois = ox.features_from_bbox(bbox, tags)
+    # except Exception as e:
+    #   print(f"Error querying OSMnx: {e}")
+    #   return {}
+    # if len(pois) == 0:
+    #     return {}
+    
+    # print(len(pois)
+    #print(pois.head())
+    #print('--------------------------------------------------')
+    # Count features matching each (key, value) in poi_types
+    pois_df = pd.DataFrame(pois)
+    pois_df['latitude'] = pois_df.apply(lambda row: row.geometry.centroid.y, axis=1)
+    pois_df['longitude'] = pois_df.apply(lambda row: row.geometry.centroid.x, axis=1)
+
+    #print(pois_df.head())
+    #print('--------------------------------------------------')
+    #tourist_places_df = pois_df[pois_df.tourism.notnull()]
+    # Return dictionary of counts
+    poi_counts = {}
+    for key, value in features:
+        if key in pois_df.columns:
+            if value:  # count only that value
+                poi_counts[f"{key}:{value}"] = (pois_df[key] == value).sum()
+            else:  # count any non-null entry
+                poi_counts[key] = pois_df[key].notnull().sum()
+        else:
+            poi_counts[f"{key}:{value}" if value else key] = 0
+    # poi_counts_df = pd.DataFrame(list(poi_counts.items()), columns=["POI Type", "Count"])
+    # poi_counts_df # feature vector/poi_counts
+
+    #raise NotImplementedError("Feature extraction not implemented yet.")
+    return poi_counts
