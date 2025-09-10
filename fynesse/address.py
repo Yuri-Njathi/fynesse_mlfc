@@ -104,3 +104,39 @@ def analyze_data(data: Union[pd.DataFrame, Any]) -> dict[str, Any]:
         logger.error(f"Error during data analysis: {e}")
         print(f"Error analyzing data: {e}")
         return {"error": str(e)}
+
+def cross_entropy(y_true, y_pred):
+    #TODO
+    N = len(y_true)
+    y_pred = np.array(y_pred)+1e-24
+    y_true = np.array(y_true)
+    # Calculate the cross-entropy loss
+    return -(1.0/N) * np.sum(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+    ##raise NotImplementedError("Cross entropy not implemented yet.")
+
+def evaluate_prediction_system(df, your_function, max_samples=1000):
+    # Randomly sample up to 1000, if full evaluation taking too long
+    np.random.seed(42)
+    coords = [(date, camera, species) for date in df.index for (camera, species) in df.columns]
+    if len(coords) > max_samples:
+        coords = np.random.choice(len(coords), size=max_samples, replace=False)
+        coords = [coords[i] if isinstance(coords[i], tuple) else
+                  [(date, camera, species) for date in df.index for (camera, species) in df.columns][coords[i]]
+                  for i in range(len(coords))]
+    else:
+        coords = coords
+
+    y_true = []
+    y_pred = []
+
+    for date, camera, species in coords:
+        # print(date, camera, species)
+        value = df.loc[date, (camera, species)]
+        # print(value)
+        y_true.append(value)
+        prob = bayes_sighting_probability(df, camera, species, date)
+        y_pred.append(prob)
+        #break
+    #print(y_pred)
+    #print(np.mean(y_true))
+    return cross_entropy(y_true, y_pred)
