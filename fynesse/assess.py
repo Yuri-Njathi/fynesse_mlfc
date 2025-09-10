@@ -264,3 +264,42 @@ def get_feature_vector(latitude, longitude, box_size_km=2, features=None):
 
     #raise NotImplementedError("Feature extraction not implemented yet.")
     return poi_counts
+
+#plotting func for dsail porini
+def custom_poi_plot_city_map(place_name, latitude, longitude, box_size_km=2, poi_tags=load_default_tags(), custom_poi=None):
+    '''
+    Access and visualize geographic data
+    '''
+    bbox = get_bbox(latitude, longitude, box_size_km)
+    west, south, east, north = bbox
+
+    pois = get_pois(bbox, poi_tags)
+    graph = ox.graph_from_bbox(bbox)
+    area = ox.geocode_to_gdf(place_name)
+    nodes, edges = ox.graph_to_gdfs(graph)
+    buildings = ox.features_from_bbox(bbox, poi_tags)
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    buildings.plot(ax=ax, facecolor="gray", edgecolor="gray")
+    edges.plot(ax=ax, linewidth=1, edgecolor="black", alpha=0.3)
+    nodes.plot(ax=ax, color="black", markersize=1, alpha=0.3)
+    pois.plot(ax=ax, color="green", markersize=5, alpha=1)
+
+    ax.set_xlim(west, east)
+    ax.set_ylim(south, north)
+    ax.set_title(place_name, fontsize=14)
+
+    # Different colors for each cluster
+    colors = ["red", "blue", "purple", "orange", "cyan"]
+
+    for i, coords in enumerate(custom_poi):
+        lats = [v[0] for v in coords.values()]
+        lons = [v[1] for v in coords.values()]
+        ax.scatter(lons, lats, c=colors[i % len(colors)], s=40, marker="o", label=f"Cluster {i}")
+
+        # Add labels
+        for key, (lat, lon) in coords.items():
+            ax.text(lon, lat, key, fontsize=8, ha="right", va="bottom")
+
+    ax.legend()
+    plt.show()
