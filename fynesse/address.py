@@ -140,3 +140,42 @@ def evaluate_prediction_system(df, your_function, max_samples=1000):
     #print(y_pred)
     #print(np.mean(y_true))
     return cross_entropy(y_true, y_pred)
+def bayes_sighting_probability(df, camera, species, date,debug=False) -> float:
+    """
+    Removes a specific observation and estimates the probability of sighting
+    a given species at a given camera on a specific date.
+
+    Parameters:
+        df (pd.DataFrame): DataFrame with MultiIndex columns (camera, species) and datetime.date index.
+        camera (str): Camera ID (e.g. 'C001').
+        species (str): Species name (e.g. 'IMPALA').
+        date (str or datetime.date or pd.Timestamp): Date of the observation.
+
+    Returns:
+        float: Estimated sighting probability - TODO.
+    """
+    # if isinstance(date, str) or isinstance(date, pd.Timestamp):
+    #     date = pd.to_datetime(date).date()
+
+    df_blind = df.copy()
+    
+    df_blind.loc[date, (camera, species)] = None #df blind table of interest
+
+    probability_of_a_sighting = df_blind.mean().mean()
+    
+    prob_of_sighting_given_camera = df_blind.loc[:,(camera,slice(None))].mean().mean()
+    #print(df_blind.loc[date,:].head())
+    
+    prob_of_sighting_given_species = df_blind.loc[:,(slice(None),species)].mean().mean()
+    
+    prob_of_sighting_given_date = df_blind.loc[date,:].mean()
+    
+    #TODO
+    if debug:
+      print("probability of a sighting",probability_of_a_sighting)
+      print("prob of sighting given date",prob_of_sighting_given_date)
+      print("prob of sighting given species",prob_of_sighting_given_species)
+      print("prob of sighting given camera",prob_of_sighting_given_camera)
+    naive_bayes_probability = prob_of_sighting_given_camera*prob_of_sighting_given_species*prob_of_sighting_given_date/probability_of_a_sighting**2
+    #print("naive bayes probability",naive_bayes_probability)
+    return naive_bayes_probability
